@@ -1,6 +1,13 @@
 package br.com.beertime.model
 
+import com.fasterxml.jackson.annotation.JsonAlias
+
 /**
  * Created by Artur on 26/10/2019.
  */
-class Beer(val name: String, val image_url: String, val description: String)
+class Beer {
+    lateinit var name: String
+    @JsonAlias("image_url")
+    lateinit var imageUrl: String
+    lateinit var description: String
+}
