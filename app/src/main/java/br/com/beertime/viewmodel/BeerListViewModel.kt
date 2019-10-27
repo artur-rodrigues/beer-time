@@ -1,39 +1,42 @@
 package br.com.beertime.viewmodel
 
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import br.com.beertime.factory.RepositoryFactory
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
+import br.com.beertime.infra.factory.BeerDataFactory
 import br.com.beertime.model.Beer
-import br.com.beertime.model.StatusRequest
-import kotlinx.coroutines.*
+import br.com.beertime.model.NetworkResponse
+import java.util.concurrent.Executors
 
 /**
  * Created by Artur on 26/10/2019.
  */
 class BeerListViewModel : ViewModel() {
 
-    private val repository = RepositoryFactory.buildBeerRepository()
-    val beerListLiveData = MutableLiveData<MutableList<Beer>>()
-    val status = MutableLiveData<StatusRequest>()
+    lateinit var netWorkResponse: LiveData<NetworkResponse>
+    lateinit var beerLiveData: LiveData<PagedList<Beer>>
 
-    fun loadBeerList() {
-        GlobalScope.launch(Dispatchers.Main) {
-            status.value = StatusRequest.LOADING
+    init {
+        init()
+    }
 
-            try {
-                val response = repository.getBeerList().await()
-
-                if(response.isSuccessful) {
-                    beerListLiveData.value = response.body()
-                    status.value = StatusRequest.SUCCESS
-                } else {
-                    status.value = StatusRequest.ERROR
-                    // Levantar exceção
-                }
-            } catch (e: Exception) {
-                status.value = StatusRequest.ERROR
-                // Levantar exceção
-            }
+    private fun init() {
+        val beerDataFactory = BeerDataFactory()
+        netWorkResponse = Transformations
+            .switchMap(beerDataFactory.dataSourceLiveData) {
+            it.networkState
         }
+
+        val pagedListConfig = PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setInitialLoadSizeHint(25)
+                .setPrefetchDistance(2) // Testar
+                .setPageSize(50).build()
+
+        beerLiveData = LivePagedListBuilder(beerDataFactory, pagedListConfig)
+            .setFetchExecutor(Executors.newFixedThreadPool(5))
+            .build()
     }
 }

@@ -1,6 +1,6 @@
-package br.com.beertime.factory
+package br.com.beertime.infra.factory
 
-import br.com.beertime.repository.BeerRepository
+import br.com.beertime.infra.repository.BeerRepository
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
