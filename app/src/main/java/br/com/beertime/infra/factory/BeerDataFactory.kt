@@ -15,8 +15,13 @@ class BeerDataFactory : Factory<Long, Beer>() {
     private lateinit var beerDataSource: BeerDataSource
 
     override fun create(): DataSource<Long, Beer> {
+        dataSourceLiveData.value?.invalidate()
         beerDataSource = BeerDataSource()
         dataSourceLiveData.postValue(beerDataSource)
         return beerDataSource
+    }
+
+    fun invalidate() {
+        dataSourceLiveData.value?.invalidate()
     }
 }

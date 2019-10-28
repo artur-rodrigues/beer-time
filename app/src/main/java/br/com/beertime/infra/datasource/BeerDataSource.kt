@@ -1,6 +1,5 @@
 package br.com.beertime.infra.datasource
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import br.com.beertime.infra.factory.RepositoryFactory
@@ -59,26 +58,16 @@ class BeerDataSource : PageKeyedDataSource<Long, Beer>() {
                 if(response.isSuccessful) {
                     if (response.body() != null) {
                         val nextKey = if(response.body()!!.size < 25) null else params.key + 1
-                        Log.d("DATA_SOURCE", nextKey.toString())
                         callback.onResult(response.body()!!, nextKey)
                         networkState.postValue(NetworkResponse.SUCCESS)
                     } else {
                         networkState.postValue(NetworkResponse.responseErro(errorMsg))
-                        Log.e("DATA_SOURCE", "Body do response veio nulo")
-                        Log.e("DATA_SOURCE", params.key.toString())
                     }
                 } else {
-//                    networkState.value = br.com.beertime.model.NetworkResponse.Status.ERROR
                     networkState.postValue(NetworkResponse.responseErro(errorMsg))
-                    Log.e("DATA_SOURCE", "Response de problema")
-                    Log.e("DATA_SOURCE", params.key.toString())
-                    // Levantar exceção
                 }
             } catch (e: Exception) {
-//                networkState.value = br.com.beertime.model.NetworkResponse.Status.ERROR
                 networkState.postValue(NetworkResponse.responseErro(errorMsg))
-                Log.e("DATA_SOURCE", e.message)
-                // Levantar exceção
             }
         }
     }

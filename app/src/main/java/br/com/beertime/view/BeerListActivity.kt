@@ -1,5 +1,6 @@
 package br.com.beertime.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -13,6 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.beertime.R
 import br.com.beertime.adapter.BeerPageAdapter
 import br.com.beertime.databinding.ActivityBeerListBinding
+import br.com.beertime.model.NetworkResponse
+import br.com.beertime.utils.createCompleteDialog
+import br.com.beertime.utils.createPositiveDialog
+import br.com.beertime.utils.isInternetAvailable
 import br.com.beertime.viewmodel.BeerListViewModel
 
 
@@ -22,16 +27,28 @@ class BeerListActivity : AppCompatActivity() {
     lateinit var binding: ActivityBeerListBinding
     lateinit var adapter: BeerPageAdapter
     var hideProgress = true
+    val INIT_PROCCESS_CODE = 100
+    val RUNNING_PROCCESS_CODE = 200
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(BeerListViewModel::class.java)
+        if(isInternetAvailable(this)) {
+            init()
+        } else {
+            createInternetDialog(INIT_PROCCESS_CODE)
+        }
+    }
+
+    private fun init() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_beer_list)
         binding.viewModel = viewModel
         binding.listBeer.layoutManager = LinearLayoutManager(applicationContext)
 
         adapter = BeerPageAdapter {
-            print(it.name)
+            /*createDialog(this, "Isto é um teste") {
+                print("Deu certo!")
+            }*/
         }
 
         viewModel.beerLiveData.observe(this, Observer{
@@ -45,6 +62,19 @@ class BeerListActivity : AppCompatActivity() {
 
         viewModel.netWorkResponse.observe(this, Observer {
             adapter.setNetworkResponse(it)
+
+            if(it.status === NetworkResponse.Status.ERROR) {
+                if(isInternetAvailable(this)) {
+                    /*createPositiveDialog(this, it.msg) {
+                        viewModel.invalidate()
+                    }*/
+                    createErrorDialog(it.msg) {
+                        viewModel.invalidate()
+                    }
+                } else {
+                    createInternetDialog(RUNNING_PROCCESS_CODE)
+                }
+            }
         })
 
         val divider = DividerItemDecoration(applicationContext, DividerItemDecoration.VERTICAL)
@@ -61,7 +91,7 @@ class BeerListActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                // Dialog para sair
+                createExitDialog()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -69,7 +99,47 @@ class BeerListActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        // Dialog para sair
-        super.onBackPressed()
+        createExitDialog()
+    }
+
+    private fun createExitDialog() {
+        createPositiveDialog(this, getString(R.string.exit_message)) {
+            finish()
+        }
+    }
+
+    private fun createErrorDialog(msg: String, clickPositive: () -> Unit) {
+        createCompleteDialog(this,
+            msg,
+            getString(R.string.btn_reload),
+            getString(R.string.btn_leave),
+            clickPositive) {
+                finish()
+            }
+    }
+
+    private fun createInternetDialog(code: Int) {
+        createCompleteDialog(this,
+            getString(R.string.internet_off_message),
+            getString(R.string.btn_solve),
+            getString(R.string.btn_leave), {
+                startActivityForResult(
+                    Intent(android.provider.Settings.ACTION_SETTINGS), code)
+            }, {
+                finish()
+            })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(isInternetAvailable(this)) {
+            when (requestCode) {
+                INIT_PROCCESS_CODE -> init()
+                RUNNING_PROCCESS_CODE -> viewModel.invalidate()
+            }
+        } else {
+            createInternetDialog(requestCode)
+        }
+
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }

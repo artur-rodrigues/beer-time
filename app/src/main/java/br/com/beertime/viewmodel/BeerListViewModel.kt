@@ -17,13 +17,13 @@ class BeerListViewModel : ViewModel() {
 
     lateinit var netWorkResponse: LiveData<NetworkResponse>
     lateinit var beerLiveData: LiveData<PagedList<Beer>>
-
+    lateinit var beerDataFactory: BeerDataFactory
     init {
         init()
     }
 
     private fun init() {
-        val beerDataFactory = BeerDataFactory()
+        beerDataFactory = BeerDataFactory()
         netWorkResponse = Transformations
             .switchMap(beerDataFactory.dataSourceLiveData) {
             it.networkState
@@ -38,5 +38,11 @@ class BeerListViewModel : ViewModel() {
         beerLiveData = LivePagedListBuilder(beerDataFactory, pagedListConfig)
             .setFetchExecutor(Executors.newFixedThreadPool(5))
             .build()
+    }
+
+    fun invalidate() {
+        if(::beerDataFactory.isInitialized) {
+            beerDataFactory.invalidate()
+        }
     }
 }
