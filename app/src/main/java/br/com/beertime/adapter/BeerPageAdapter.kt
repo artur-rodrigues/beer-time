@@ -11,6 +11,7 @@ import br.com.beertime.databinding.ItemBinding
 import br.com.beertime.databinding.ProgressBinding
 import br.com.beertime.model.Beer
 import br.com.beertime.model.NetworkResponse
+import br.com.beertime.utils.loadImageForList
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -109,13 +110,9 @@ class BeerPageAdapter(val click: (beer: Beer) -> Unit) : PagedListAdapter<Beer, 
         fun bindView(beer: Beer) {
             binding.labelBeerName.text = beer.name
             if(beer.imageUrl != null) {
-                Picasso.get()
-                    .load(beer.imageUrl)
-                    .resize(60, 60)
-                    .placeholder(R.mipmap.ic_launcher_round)
-                    .into(binding.imgListBeer)
+                loadImageForList(beer.imageUrl!!, binding.imgListBeer)
             } else {
-                binding.imgListBeer.setImageResource(R.mipmap.ic_launcher_round)
+                binding.imgListBeer.setImageResource(R.mipmap.place_holder)
             }
 
             binding.cardView.setOnClickListener {

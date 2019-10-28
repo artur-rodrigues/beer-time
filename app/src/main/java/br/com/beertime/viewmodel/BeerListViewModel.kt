@@ -16,7 +16,7 @@ import java.util.concurrent.Executors
 class BeerListViewModel : ViewModel() {
 
     lateinit var netWorkResponse: LiveData<NetworkResponse>
-    lateinit var beerLiveData: LiveData<PagedList<Beer>>
+    lateinit var beerPagedListLiveData: LiveData<PagedList<Beer>>
     lateinit var beerDataFactory: BeerDataFactory
     init {
         init()
@@ -32,10 +32,10 @@ class BeerListViewModel : ViewModel() {
         val pagedListConfig = PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
                 .setInitialLoadSizeHint(25)
-                .setPrefetchDistance(2) // Testar
+                .setPrefetchDistance(2)
                 .setPageSize(50).build()
 
-        beerLiveData = LivePagedListBuilder(beerDataFactory, pagedListConfig)
+        beerPagedListLiveData = LivePagedListBuilder(beerDataFactory, pagedListConfig)
             .setFetchExecutor(Executors.newFixedThreadPool(5))
             .build()
     }

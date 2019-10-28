@@ -27,8 +27,8 @@ class BeerListActivity : AppCompatActivity() {
     lateinit var binding: ActivityBeerListBinding
     lateinit var adapter: BeerPageAdapter
     var hideProgress = true
-    val INIT_PROCCESS_CODE = 100
-    val RUNNING_PROCCESS_CODE = 200
+    private val initProcessCode = 100
+    private val runningProcessCode = 200
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +36,7 @@ class BeerListActivity : AppCompatActivity() {
         if(isInternetAvailable(this)) {
             init()
         } else {
-            createInternetDialog(INIT_PROCCESS_CODE)
+            createInternetDialog(initProcessCode)
         }
     }
 
@@ -46,12 +46,15 @@ class BeerListActivity : AppCompatActivity() {
         binding.listBeer.layoutManager = LinearLayoutManager(applicationContext)
 
         adapter = BeerPageAdapter {
+            val intent = Intent(this, BeerDetailActivity::class.java)
+            intent.putExtra("beer", it)
+            startActivity(intent)
             /*createDialog(this, "Isto é um teste") {
                 print("Deu certo!")
             }*/
         }
 
-        viewModel.beerLiveData.observe(this, Observer{
+        viewModel.beerPagedListLiveData.observe(this, Observer{
             adapter.submitList(it)
 
             if(hideProgress) {
@@ -72,7 +75,7 @@ class BeerListActivity : AppCompatActivity() {
                         viewModel.invalidate()
                     }
                 } else {
-                    createInternetDialog(RUNNING_PROCCESS_CODE)
+                    createInternetDialog(runningProcessCode)
                 }
             }
         })
@@ -133,8 +136,8 @@ class BeerListActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if(isInternetAvailable(this)) {
             when (requestCode) {
-                INIT_PROCCESS_CODE -> init()
-                RUNNING_PROCCESS_CODE -> viewModel.invalidate()
+                initProcessCode -> init()
+                runningProcessCode -> viewModel.invalidate()
             }
         } else {
             createInternetDialog(requestCode)
