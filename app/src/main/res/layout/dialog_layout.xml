@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="32dp"
+            android:textColor="@color/colorAccent"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -27,6 +28,7 @@
             android:id="@+id/linearLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin_padding"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/labelMessage"
@@ -36,7 +38,9 @@
                 android:id="@+id/btnPositive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/btn_yes" />
+                android:background="@drawable/ripple_effect_positive_button"
+                android:text="@string/btn_yes"
+                android:textColor="@android:color/white" />
 
             <Space
                 android:layout_width="10dp"
@@ -46,7 +50,9 @@
                 android:id="@+id/btnNegative"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/btn_no" />
+                android:background="@drawable/ripple_effect_negative_button"
+                android:text="@string/btn_no"
+                android:textColor="@android:color/white" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

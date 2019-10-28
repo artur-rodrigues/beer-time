@@ -1,6 +1,7 @@
 package br.com.beertime.view
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import br.com.beertime.R
@@ -20,5 +21,17 @@ class BeerDetailActivity : AppCompatActivity() {
         binding.labelBeerName.text = beer.name
         binding.labelBeerDescription.text = beer.description
         beer.imageUrl?.let { loadImageForDetail(it, binding.imgDetailBeer) }
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

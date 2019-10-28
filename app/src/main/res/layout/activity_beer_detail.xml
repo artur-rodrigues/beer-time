@@ -42,13 +42,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="35dp"
-                tools:text="Beer's description"
+                android:layout_marginBottom="16dp"
                 android:textColor="@color/colorAccent"
-                android:textStyle="bold"
                 android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/labelBeerName" />
+                app:layout_constraintTop_toBottomOf="@+id/labelBeerName"
+                tools:text="Beer's description" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

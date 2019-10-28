@@ -60,6 +60,7 @@ class BeerListActivity : AppCompatActivity() {
             if(hideProgress) {
                 binding.loadingArea.visibility = View.GONE
                 binding.listBeer.visibility = View.VISIBLE
+                hideProgress = !hideProgress
             }
         })
 
