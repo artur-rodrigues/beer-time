@@ -1,5 +1,6 @@
 package br.com.beertime.infra.datasource
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import br.com.beertime.infra.factory.RepositoryFactory
@@ -36,14 +37,11 @@ class BeerDataSource : PageKeyedDataSource<Long, Beer>() {
                         networkState.postValue(NetworkResponse.responseErro(errorMsg))
                     }
                 } else {
-//                    networkState.value = br.com.beertime.model.NetworkResponse.Status.ERROR
                     networkState.postValue(NetworkResponse.responseErro(errorMsg))
-                    // Levantar exceção
                 }
             } catch (e: Exception) {
-//                networkState.value = br.com.beertime.model.NetworkResponse.Status.ERROR
                 networkState.postValue(NetworkResponse.responseErro(errorMsg))
-                // Levantar exceção
+                Log.e("DATA_SOURCE", e.message!!)
             }
         }
     }
@@ -68,6 +66,7 @@ class BeerDataSource : PageKeyedDataSource<Long, Beer>() {
                 }
             } catch (e: Exception) {
                 networkState.postValue(NetworkResponse.responseErro(errorMsg))
+                Log.e("DATA_SOURCE", e.message!!)
             }
         }
     }

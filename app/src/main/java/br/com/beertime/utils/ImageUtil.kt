@@ -16,12 +16,11 @@ fun loadImageForDetail(url: String, imgView: ImageView) {
     loadImageInImageView(url, 300, 300, R.mipmap.place_holder, imgView)
 }
 
-fun loadImageInImageView(url: String, width: Int,
-                         height: Int, @DrawableRes id: Int,
-                         imgView: ImageView) {
+fun loadImageInImageView(url: String, width: Int, height: Int,
+                         @DrawableRes idPlaceHolder: Int, imgView: ImageView) {
     Picasso.get()
         .load(url)
         .resize(width, height)
-        .placeholder(id)
+        .placeholder(idPlaceHolder)
         .into(imgView)
 }

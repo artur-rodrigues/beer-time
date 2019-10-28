@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -42,16 +43,12 @@ class BeerListActivity : AppCompatActivity() {
 
     private fun init() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_beer_list)
-        binding.viewModel = viewModel
         binding.listBeer.layoutManager = LinearLayoutManager(applicationContext)
 
         adapter = BeerPageAdapter {
             val intent = Intent(this, BeerDetailActivity::class.java)
             intent.putExtra("beer", it)
             startActivity(intent)
-            /*createDialog(this, "Isto é um teste") {
-                print("Deu certo!")
-            }*/
         }
 
         viewModel.beerPagedListLiveData.observe(this, Observer{
@@ -64,14 +61,11 @@ class BeerListActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.netWorkResponse.observe(this, Observer {
+        viewModel.networkResponse.observe(this, Observer {
             adapter.setNetworkResponse(it)
 
             if(it.status === NetworkResponse.Status.ERROR) {
                 if(isInternetAvailable(this)) {
-                    /*createPositiveDialog(this, it.msg) {
-                        viewModel.invalidate()
-                    }*/
                     createErrorDialog(it.msg) {
                         viewModel.invalidate()
                     }
@@ -112,7 +106,7 @@ class BeerListActivity : AppCompatActivity() {
         }
     }
 
-    private fun createErrorDialog(msg: String, clickPositive: () -> Unit) {
+    private fun createErrorDialog(msg: String, clickPositive: (dialog: AlertDialog) -> Unit) {
         createCompleteDialog(this,
             msg,
             getString(R.string.btn_reload),
@@ -127,8 +121,17 @@ class BeerListActivity : AppCompatActivity() {
             getString(R.string.internet_off_message),
             getString(R.string.btn_solve),
             getString(R.string.btn_leave), {
-                startActivityForResult(
-                    Intent(android.provider.Settings.ACTION_SETTINGS), code)
+                if(isInternetAvailable(this)) {
+                    it.dismiss()
+                    if(::binding.isInitialized) {
+                        viewModel.invalidate()
+                    } else {
+                        init()
+                    }
+                } else {
+                    startActivityForResult(
+                        Intent(android.provider.Settings.ACTION_SETTINGS), code)
+                }
             }, {
                 finish()
             })

@@ -6,7 +6,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorItemBeerList">
+        android:background="@color/colorLightBeer">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -16,14 +16,14 @@
             tools:context=".view.BeerDetailActivity">
 
             <ImageView
-                android:id="@+id/imgDetailBeer"
+                android:id="@+id/imgBeerDetail"
                 android:layout_width="300dp"
                 android:layout_height="300dp"
                 android:layout_marginTop="60dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
+                android:src="@mipmap/place_holder" />
 
             <TextView
                 android:id="@+id/labelBeerName"
@@ -33,9 +33,9 @@
                 android:textStyle="bold"
                 tools:text="Beer's name"
                 android:textSize="35sp"
-                app:layout_constraintEnd_toEndOf="@+id/imgDetailBeer"
-                app:layout_constraintStart_toStartOf="@+id/imgDetailBeer"
-                app:layout_constraintTop_toBottomOf="@+id/imgDetailBeer" />
+                app:layout_constraintEnd_toEndOf="@+id/imgBeerDetail"
+                app:layout_constraintStart_toStartOf="@+id/imgBeerDetail"
+                app:layout_constraintTop_toBottomOf="@+id/imgBeerDetail" />
 
             <TextView
                 android:id="@+id/labelBeerDescription"

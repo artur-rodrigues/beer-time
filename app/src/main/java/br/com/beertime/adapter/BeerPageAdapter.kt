@@ -1,6 +1,5 @@
 package br.com.beertime.adapter
 
-import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,11 +11,6 @@ import br.com.beertime.databinding.ProgressBinding
 import br.com.beertime.model.Beer
 import br.com.beertime.model.NetworkResponse
 import br.com.beertime.utils.loadImageForList
-import com.squareup.picasso.Picasso
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 /**
  * Created by Artur on 27/10/2019.
@@ -26,9 +20,13 @@ class BeerPageAdapter(val click: (beer: Beer) -> Unit) : PagedListAdapter<Beer, 
     private val progressType = 0
     private val itemType = 1
     private var networkResponse: NetworkResponse = NetworkResponse.LOADING
+    private lateinit var inflater: LayoutInflater
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
+        if(! ::inflater.isInitialized) {
+            inflater = LayoutInflater.from(parent.context)
+        }
+//        val inflater = LayoutInflater.from(parent.context)
 
         return when(viewType) {
             progressType -> {
@@ -36,7 +34,7 @@ class BeerPageAdapter(val click: (beer: Beer) -> Unit) : PagedListAdapter<Beer, 
             }
             itemType -> {
                 val itemBinding = ItemBinding.inflate(inflater, parent, false)
-                BeeritemViewHoler(itemBinding)
+                BeerItemViewHoler(itemBinding)
             }
             else -> {
                 createProgressViewHolder(inflater, parent)
@@ -50,7 +48,7 @@ class BeerPageAdapter(val click: (beer: Beer) -> Unit) : PagedListAdapter<Beer, 
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is BeeritemViewHoler) {
+        if (holder is BeerItemViewHoler) {
             getItem(position)?.let { holder.bindView(it) }
         } else if (holder is ProgressItemViewHolder) {
             holder.bindView(networkResponse)
@@ -104,7 +102,7 @@ class BeerPageAdapter(val click: (beer: Beer) -> Unit) : PagedListAdapter<Beer, 
         }
     }
 
-    inner class BeeritemViewHoler(private val binding: ItemBinding) :
+    inner class BeerItemViewHoler(private val binding: ItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bindView(beer: Beer) {

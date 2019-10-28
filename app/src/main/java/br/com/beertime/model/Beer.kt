@@ -14,8 +14,6 @@ class Beer : Serializable {
     @JsonAlias("image_url")
     var imageUrl: String? = null
     lateinit var description: String
-//    @get:JsonIgnore
-//    var image: Bitmap? = null
 
     companion object {
         var DIFF_CALLBACK: DiffUtil.ItemCallback<Beer> = object : DiffUtil.ItemCallback<Beer>() {

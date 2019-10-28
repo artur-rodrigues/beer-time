@@ -12,18 +12,18 @@ import android.os.Build
 @Suppress("DEPRECATION")
 fun isInternetAvailable(context: Context): Boolean {
     var result = false
-    val cm = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager?
+    val connectionManager = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager?
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        cm?.run {
-            cm.getNetworkCapabilities(cm.activeNetwork)?.run {
+        connectionManager?.run {
+            connectionManager.getNetworkCapabilities(connectionManager.activeNetwork)?.run {
                 result = hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
                         hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
                         hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
             }
         }
     } else {
-        cm?.run {
-            cm.activeNetworkInfo?.run {
+        connectionManager?.run {
+            connectionManager.activeNetworkInfo?.run {
                 if (type == ConnectivityManager.TYPE_WIFI) {
                     result = true
                 } else if (type == ConnectivityManager.TYPE_MOBILE) {

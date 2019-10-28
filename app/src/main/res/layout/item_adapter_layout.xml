@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         tools:cardCornerRadius="10dp"
         app:cardCornerRadius="10dp"
-        app:cardBackgroundColor="@color/colorItemBeerList"
+        app:cardBackgroundColor="@color/colorLightBeer"
         tools:cardElevation="3dp"
         app:cardElevation="3dp"
         app:contentPadding="5dp"

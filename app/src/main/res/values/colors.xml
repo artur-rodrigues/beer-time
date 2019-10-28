@@ -3,7 +3,7 @@
     <color name="colorPrimary">#FFB74D</color>
     <color name="colorPrimaryDark">#c88719</color>
     <color name="colorAccent">#8D6E63</color>
-    <color name="colorItemBeerList">#FFECB3</color>
+    <color name="colorLightBeer">#FFECB3</color>
     <color name="colorLightSplash">#ffbb67</color>
     <color name="colorBtnNegative">#bdbdbd</color>
     <color name="colorBlack15">#26000000</color>

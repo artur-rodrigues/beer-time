@@ -15,7 +15,7 @@ import java.util.concurrent.Executors
  */
 class BeerListViewModel : ViewModel() {
 
-    lateinit var netWorkResponse: LiveData<NetworkResponse>
+    lateinit var networkResponse: LiveData<NetworkResponse>
     lateinit var beerPagedListLiveData: LiveData<PagedList<Beer>>
     lateinit var beerDataFactory: BeerDataFactory
     init {
@@ -24,7 +24,7 @@ class BeerListViewModel : ViewModel() {
 
     private fun init() {
         beerDataFactory = BeerDataFactory()
-        netWorkResponse = Transformations
+        networkResponse = Transformations
             .switchMap(beerDataFactory.dataSourceLiveData) {
             it.networkState
         }

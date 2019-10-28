@@ -18,12 +18,10 @@ import kotlinx.coroutines.launch
  */
 class SplashActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivitySplashBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
+        val binding: ActivitySplashBinding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
 
         binding.labelBeer.text = createSplashText(R.string.label_splash_beer)
         binding.labelTime.text = createSplashText(R.string.label_splash_time)
@@ -37,7 +35,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun createSplashText(@StringRes id: Int): SpannableString {
         val spannableLabelBeer = SpannableString(getString(id))
-        spannableLabelBeer.setSpan(RelativeSizeSpan(2f), 0, 1, 0) // set size
+        spannableLabelBeer.setSpan(RelativeSizeSpan(2f), 0, 1, 0)
         return spannableLabelBeer
     }
 }
